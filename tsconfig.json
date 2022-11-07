@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "rootDir": "./src",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "typeRoots": [
+      "./src/types",
+      "./node_modules/@types"
+    ],
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+  },
+  "include": [
+    "src/**/*",
+    "public"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
