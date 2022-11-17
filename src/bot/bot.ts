@@ -8,8 +8,7 @@ import { MyContext } from '@/types/interfaces'
 config();
 
 export const bot = new Bot<MyContext>(process.env.BOT_TOKEN);
-bot.use(session({ initial: Util.initialSession }));
-
+bot.use(session({ getSessionKey: Util.getSessionKey, initial: Util.initialSession }));
 bot.api.setMyCommands([
    { command: 'start', description: 'Об игре' },
    { command: 'play', description: 'Играть!' },

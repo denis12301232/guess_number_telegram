@@ -1,4 +1,6 @@
 import { SessionData } from "@/types/interfaces"
+import { Context } from "grammy";
+
 
 export default class Util {
    static randomInteger(min: number, max: number): number {
@@ -6,9 +8,13 @@ export default class Util {
    }
 
    static initialSession(): SessionData {
-      return { 
+      return {
          currentHidden: 0,
          message_ids: [],
-       };
+      };
+   }
+
+   static getSessionKey(ctx: Context): string | undefined {
+      return ctx.from?.id.toString();
    }
 }
