@@ -10,11 +10,12 @@ export default class Commands {
    static async start(ctx: CommandContext<MyContext>) {
       try {
          const { first_name, last_name, username } = ctx.msg.from!;
-         const user = await UserModel.findOne({ chatId: ctx.chat.id });
-         await UserModel.updateOne({ chatId: ctx.chat.id, name: first_name, lastname: last_name, username });
+         const user = await UserModel.findOne({ chatId: ctx.from?.id });
          if (!user) {
-            const newUser = await UserModel.create({ chatId: ctx.chat.id, name: first_name, lastname: last_name, username });
+            const newUser = await UserModel.create({ chatId: ctx.from?.id, name: first_name, lastname: last_name, username });
             await StatModel.create({ user: newUser._id });
+         } else {
+            await UserModel.updateOne({ chatId: ctx.from?.id, name: first_name, lastname: last_name, username });
          }
          return ctx.api.sendMessage(ctx.chat.id,
             `Игра "<b>Угадай число</b>":\nВ этой игре вам предстоит проверить свою удачу! Для начала игры введите команду /play!`,
@@ -41,7 +42,7 @@ export default class Commands {
 
    static async stats(ctx: CommandContext<MyContext>) {
       try {
-         const user = await UserModel.findOne({ chatId: ctx.chat.id });
+         const user = await UserModel.findOne({ chatId: ctx.from?.id });
          const stats = await StatModel.findOne({ user: user?._id });
          return ctx.reply(`Статистика:\nВерно отгадано: ${stats?.rightAnswers}\nНе верно: ${stats?.wrongAnswers}\nОтгадно ${stats?.percent.toFixed(0)}% чисел!`);
       } catch (e) {
@@ -56,7 +57,7 @@ export default class Commands {
             try {
                await ctx.editMessageReplyMarkup();
                await ctx.reply(`Выбрано число ${i}.`);
-               const user = await UserModel.findOne({ chatId: ctx.chat?.id });
+               const user = await UserModel.findOne({ chatId: ctx.from.id });
                const stat = await StatModel.findOne({ user: user?._id });
                stat!.total += 1;
                if (i === ctx.session.currentHidden) {
